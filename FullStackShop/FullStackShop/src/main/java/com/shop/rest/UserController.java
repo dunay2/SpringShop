@@ -33,7 +33,7 @@ class UserController implements IRestController<User> {
 		if (users.isEmpty()) {
 			return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);
 		}
-		log.info("listado de usuarios");
+		log.info("List of users");
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 
 	}
@@ -61,7 +61,7 @@ class UserController implements IRestController<User> {
 		Optional<User> user= repository.findByName(name);
 		if (!user.isPresent()) {
 			repository.save(record);
-			log.info("Created employee " + record.getName());
+			log.info("Created user " + record.getName());
 			return new ResponseEntity<User>(record, HttpStatus.CREATED);
 		}
 
