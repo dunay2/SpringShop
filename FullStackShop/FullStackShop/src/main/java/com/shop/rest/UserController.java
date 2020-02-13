@@ -4,27 +4,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.shop.entities.User;
 import com.shop.repositories.UserRepository;
+import com.shop.rest.exception.user.UserExistsException;
 import com.shop.rest.exception.user.UserNotFoundException;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/users")
 @Slf4j
-public class UserController {
+class UserController implements IRestController<User> {
 
 	private final UserRepository repository;
 
@@ -32,66 +26,58 @@ public class UserController {
 		this.repository = repository;
 	}
 
-	@GetMapping("/")
-	public ResponseEntity<List<User>> listAllUsers() {
+	@Override
+	public ResponseEntity<List<User>> listAll() {
 		List<User> users = repository.findAll();
 		if (users.isEmpty()) {
 			return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);
 		}
+		log.info("listado de usuarios");
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+
 	}
 
-	// method to get user by id
-	@GetMapping("/{id}")
-	ResponseEntity<User> getOne(@PathVariable Long id) {
-		Optional<User> user = repository.findById(id);
-		user.orElseThrow(() -> new UserNotFoundException(id));
-
-		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
+	@Override
+	public ResponseEntity<User> getOne(Long id) {
+		Optional<User> record = repository.findById(id);
+		record.orElseThrow(() -> new UserNotFoundException(id));
+		return new ResponseEntity<User>(record.get(), HttpStatus.OK);
 	}
 
-	// method to create an user
-	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<User> createUser(@RequestBody final User user) {
-		// if (repository.findByName(user.getName()) != null) {
-		// return new ResponseEntity<User>(
-		// new CustomErrorType(
-		// "Unable to create new user. A User with name " + user.getName() + " already
-		// exist."),
-		// HttpStatus.CONFLICT);
-		// }
-		repository.save(user);
-		return new ResponseEntity<User>(user, HttpStatus.CREATED);
+	@Override
+	public ResponseEntity<User> deleteRecord(Long id) {
+		Optional<User> record = repository.findById(id);
+		record.orElseThrow(() -> new UserNotFoundException(id));
+		repository.deleteById(id);
+		
+		return new ResponseEntity<User>(record.get(), HttpStatus.NO_CONTENT);
 	}
-	// method to update an existing user
-//	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<User> updateUser(
-//	@PathVariable("id") final Long id, @RequestBody User user) {
-//	User currentUser = repository.findById(id);
-//	if (currentUser == null) {
-//	return new ResponseEntity<User>(
-//	new CustomErrorType("Unable to upate. User with id "
-//	+ id + " not found."), HttpStatus.NOT_FOUND);
-//	}
 
-//	currentUser.setName(user.getName());
-//	currentUser.setAddress(user.getAddress());
-//	currentUser.setEmail(user.getEmail());
-//	repository.saveAndFlush(currentUser);
-//	return new ResponseEntity<User>(currentUser, HttpStatus.OK);
-//	}
-	// delete an existing user
-	// @DeleteMapping("/{id}")
-	// public ResponseEntity<User> deleteUser(@PathVariable("id") final Long id) {
-	// User user = repository.findById(id);
-	// if (user == null) {
-	// return new ResponseEntity<User>(
-	// new CustomErrorType("Unable to delete. User with id "
-	// + id + " not found."), HttpStatus.NOT_FOUND);
-//	}
-	// repository.deleteById(id);
-	// return new ResponseEntity<User>(
-	// new CustomErrorType("Deleted User with id "
-	// + id + "."), HttpStatus.NO_CONTENT);
-//}
+	@Override
+	public ResponseEntity<User> createRecord(User record) {
+		String userName = record.getName();
+		Optional<User> user = repository.findByName(userName);
+		user.orElseThrow(() -> new UserExistsException(userName));
+
+		repository.save(record);
+
+		return new ResponseEntity<User>(record, HttpStatus.CREATED);
+
+	}
+
+	@Override
+	public ResponseEntity<User> updateRecord(Long id, User record) {
+		Optional<User> currentUser = repository.findById(id);
+
+		currentUser.orElseThrow(() -> new UserNotFoundException(id));
+
+		currentUser.get().setName(record.getName());
+		currentUser.get().setAddress(record.getAddress());
+		currentUser.get().setEmail(record.getEmail());
+		
+		repository.saveAndFlush(currentUser.get());
+		return new ResponseEntity<User>(currentUser.get(), HttpStatus.OK);
+
+	}
+
 }
