@@ -33,7 +33,7 @@ app.controller('listUserController',
 					method : 'DELETE',
 					url : 'http://localhost:8080/api/users/' + userId
 				}).then(function(response) {
-					$location.path("/list-allusers");
+					$location.path("/list-all-users");
 					$route.reload();
 				});
 			}
@@ -44,14 +44,14 @@ app.controller('usersDetailsController',function($scope, $http, $location, $rout
 		$scope.userId = $routeParams.id;
 		$http({
 		method : 'GET',
-		url : 'http://localhost:8080/api/user/' + $scope.userId
+		url : 'http://localhost:8080/api/users/' + $scope.userId
 		}).then(function(response) {
 		$scope.user = response.data;
 		});
 		$scope.submitUserForm = function() {
 		$http({
-		method : 'POST',
-		url : 'http://localhost:8080/api/users/',
+		method : 'PUT',
+		url : 'http://localhost:8080/api/users/'+ $scope.userId,
 		data : $scope.user,
 		})
 		.then(
