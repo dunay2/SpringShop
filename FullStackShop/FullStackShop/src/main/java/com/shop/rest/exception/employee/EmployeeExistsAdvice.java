@@ -1,4 +1,4 @@
-package com.shop.rest.exception;
+package com.shop.rest.exception.employee;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-class EmployeeNotFoundAdvice {
+class EmployeeExistsAdvice {
 
 	@ResponseBody
-	@ExceptionHandler(EmployeeNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	String employeeNotFoundHandler(EmployeeNotFoundException ex) {
+	@ExceptionHandler(EmployeeExistsException.class)
+	@ResponseStatus(HttpStatus.CONFLICT )
+	String EmployeeExitsHandler(EmployeeExistsException ex) {
 		return ex.getMessage();
 	}
 }
