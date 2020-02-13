@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 class UserExistsAdvice {
 
 	@ResponseBody
-	@ExceptionHandler(UserNotFoundException.class)
+	@ExceptionHandler(UserExistsException.class)
 	@ResponseStatus(HttpStatus.CONFLICT )
-	String UserNotFoundHandler(UserNotFoundException ex) {
+	String UserExistHandler(UserExistsException ex) {
 		return ex.getMessage();
 	}
 }

@@ -32,15 +32,15 @@ class EmployeeController implements IRestController<Employee> {
 		if (users.isEmpty()) {
 			return new ResponseEntity<List<Employee>>(HttpStatus.NO_CONTENT);
 		}
-		log.info("listado de usuarios");
+		log.info("List of employee");
 		return new ResponseEntity<List<Employee>>(users, HttpStatus.OK);
-
 	}
 
 	@Override
 	public ResponseEntity<Employee> getOne(Long id) {
 		Optional<Employee> record = repository.findById(id);
 		record.orElseThrow(() -> new EmployeeNotFoundException(id));
+		log.info("found employee " + id);
 		return new ResponseEntity<Employee>(record.get(), HttpStatus.OK);
 	}
 
@@ -49,20 +49,22 @@ class EmployeeController implements IRestController<Employee> {
 		Optional<Employee> record = repository.findById(id);
 		record.orElseThrow(() -> new EmployeeNotFoundException(id));
 		repository.deleteById(id);
-
+		log.info("Deleted employee " + id);
 		return new ResponseEntity<Employee>(record.get(), HttpStatus.NO_CONTENT);
 	}
 
 	@Override
 	public ResponseEntity<Employee> createRecord(Employee record) {
 		String name = record.getName();
-		Optional<Employee> user = repository.findByName(name);
-		user.orElseThrow(() -> new EmployeeExistsException(name));
 
-		repository.save(record);
+		Optional<Employee> employee = repository.findByName(name);
+		if (!employee.isPresent()) {
+			repository.save(record);
+			log.info("Created employee " + record.getName());
+			return new ResponseEntity<Employee>(record, HttpStatus.CREATED);
+		}
 
-		return new ResponseEntity<Employee>(record, HttpStatus.CREATED);
-
+		return new ResponseEntity<Employee>(record, HttpStatus.CONFLICT);
 	}
 
 	@Override
@@ -75,6 +77,7 @@ class EmployeeController implements IRestController<Employee> {
 		currentEmployee.get().setRole(record.getRole());
 
 		repository.saveAndFlush(currentEmployee.get());
+		log.info("Updated employee " + id);
 		return new ResponseEntity<Employee>(currentEmployee.get(), HttpStatus.OK);
 
 	}

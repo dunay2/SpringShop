@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shop.entities.Employee;
 import com.shop.entities.User;
 import com.shop.repositories.UserRepository;
 import com.shop.rest.exception.user.UserExistsException;
@@ -55,13 +56,16 @@ class UserController implements IRestController<User> {
 
 	@Override
 	public ResponseEntity<User> createRecord(User record) {
-		String userName = record.getName();
-		Optional<User> user = repository.findByName(userName);
-		user.orElseThrow(() -> new UserExistsException(userName));
+		String name = record.getName();
 
-		repository.save(record);
+		Optional<User> user= repository.findByName(name);
+		if (!user.isPresent()) {
+			repository.save(record);
+			log.info("Created employee " + record.getName());
+			return new ResponseEntity<User>(record, HttpStatus.CREATED);
+		}
 
-		return new ResponseEntity<User>(record, HttpStatus.CREATED);
+		return new ResponseEntity<User>(record, HttpStatus.CONFLICT);
 
 	}
 
