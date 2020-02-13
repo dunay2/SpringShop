@@ -1,4 +1,4 @@
-package com.shop.rest.exception;
+package com.shop.rest.exception.user;
 
 public class UserNotFoundException extends RuntimeException {
 

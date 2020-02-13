@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.shop.entities.User;
 import com.shop.repositories.UserRepository;
-import com.shop.rest.exception.UserNotFoundException;
+import com.shop.rest.exception.user.UserNotFoundException;
 
 @RestController
 @RequestMapping("/api/users")

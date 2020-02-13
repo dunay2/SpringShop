@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shop.entities.Employee;
 import com.shop.repositories.EmployeeRepository;
-import com.shop.rest.exception.EmployeeNotFoundException;
+import com.shop.rest.exception.employee.EmployeeNotFoundException;
 
 @RestController
 @RequestMapping("/api/employees")
