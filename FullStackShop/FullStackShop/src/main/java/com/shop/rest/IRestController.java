@@ -21,7 +21,7 @@ public interface IRestController<T> {
 	@GetMapping("/{id}")
 	ResponseEntity<T> getOne(@PathVariable Long id);
 		
-	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE,  produces = MediaType.APPLICATION_JSON_VALUE) 
 	public ResponseEntity<T> createRecord(@Valid @RequestBody final T record);
 	
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
