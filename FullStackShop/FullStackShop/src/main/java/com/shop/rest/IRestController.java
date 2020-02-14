@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface IRestController<T> {
 	@GetMapping("/")
@@ -28,5 +28,6 @@ public interface IRestController<T> {
 	public ResponseEntity<T> updateRecord(@Valid @PathVariable("id") final Long id, @RequestBody T record);
 
 	 @DeleteMapping("/{id}")
+	 @PreAuthorize("hasAuthority('ADMIN')")
 	 public ResponseEntity<T> deleteRecord(@PathVariable("id") final Long id);
 }
