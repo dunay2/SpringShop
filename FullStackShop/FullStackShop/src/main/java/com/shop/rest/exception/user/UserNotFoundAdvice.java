@@ -31,6 +31,10 @@ class UserNotFoundAdvice {
 
 	private MessageSource messageSource;
 
+	public UserNotFoundAdvice(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+	
 	@ResponseBody
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
@@ -38,9 +42,7 @@ class UserNotFoundAdvice {
 		return ex.getMessage();
 	}
 
-	public UserNotFoundAdvice(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
+	
 
 	// method to handle validation error
 	@ExceptionHandler(MethodArgumentNotValidException.class)
