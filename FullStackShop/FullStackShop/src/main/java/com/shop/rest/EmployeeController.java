@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shop.entities.Employee;
 import com.shop.repositories.EmployeeRepository;
-import com.shop.rest.exception.employee.EmployeeExistsException;
 import com.shop.rest.exception.employee.EmployeeNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
