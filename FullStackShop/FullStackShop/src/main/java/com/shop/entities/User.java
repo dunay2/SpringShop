@@ -18,7 +18,6 @@ public class User {
 	@GeneratedValue
 	@Column(name = "USER_ID")
 	private Long id;
-	@NotEmpty
 	@NotEmpty(message = "error.name.empty")
 	@Length(max = 50, message = "error.name.length")
 	@Column(name = "NAME")
