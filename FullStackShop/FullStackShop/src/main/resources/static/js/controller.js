@@ -60,9 +60,7 @@ app.controller('usersDetailsController',function($scope, $http, $location, $rout
 				$route.reload();
 				},
 				function(errResponse) {
-				$scope.errorMessage = "Error while updating User - Error Message: '"
-				+ errResponse.data.
-				errorMessage;
+				$scope.errorMessage = "Error while updating User - Error Message: '" + errResponse.data.errorMessage;
 				});
 				}
 				});

@@ -25,7 +25,7 @@ public interface IRestController<T> {
 	public ResponseEntity<T> createRecord(@Valid @RequestBody final T record);
 	
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<T> updateRecord(	@PathVariable("id") final Long id, @RequestBody T record);
+	public ResponseEntity<T> updateRecord(@Valid @PathVariable("id") final Long id, @RequestBody T record);
 
 	 @DeleteMapping("/{id}")
 	 public ResponseEntity<T> deleteRecord(@PathVariable("id") final Long id);
