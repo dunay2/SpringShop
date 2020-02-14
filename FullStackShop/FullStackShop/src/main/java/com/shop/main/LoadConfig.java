@@ -18,7 +18,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaRepositories("com.shop.repositories")
 @EntityScan("com.shop.entities")
-@ComponentScan(basePackages = { "com.shop.rest" })
+@ComponentScan(basePackages = { "com.shop.rest","com.shop.services" })
 @Configuration
 @Slf4j
 class LoadConfiguration {
