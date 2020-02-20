@@ -1,4 +1,4 @@
-package com.shop.entities;
+package com.shop.app.model;
 
 import lombok.Data;
 
@@ -9,15 +9,15 @@ import javax.persistence.Id;
 @Data
 @Entity
 public
-class Employee {
+class EmployeeDTO {
 
 	private @Id @GeneratedValue Long id;
 	private String name;
 	private String role;
 
-	Employee() {}
+	EmployeeDTO() {}
 
-	public Employee(String name, String role) {
+	public EmployeeDTO(String name, String role) {
 		this.name = name;
 		this.role = role;
 	}

@@ -1,13 +1,4 @@
 package com.shop.main;
-
-import lombok.extern.slf4j.Slf4j;
-
-import com.shop.repositories.EmployeeRepository;
-import com.shop.repositories.UserRepository;
-
-import com.shop.entities.Employee;
-import com.shop.entities.User;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -16,9 +7,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@EnableJpaRepositories("com.shop.repositories")
-@EntityScan("com.shop.entities")
-@ComponentScan(basePackages = { "com.shop.rest","com.shop.services" })
+import lombok.extern.slf4j.Slf4j;
+
+import com.shop.app.repository.EmployeeRepository;
+import com.shop.app.repository.UserDTORepository;
+
+import com.shop.app.model.EmployeeDTO;
+import com.shop.app.model.UserDTO;
+
+/**
+ * Configuration class: preloads some data for testing
+ * handles property file load for language configuration
+ * @author ashh412
+ *
+ */
+
+@EnableJpaRepositories(basePackages = { "com.shop.app.repository","com.shop.auth.repository" })
+@EntityScan(basePackages = { "com.shop.app.model","com.shop.auth.model" }) 
+@ComponentScan(basePackages = { "com.shop.rest","com.shop.auth.service" })
 @Configuration
 @Slf4j
 class LoadConfiguration {
@@ -26,16 +32,16 @@ class LoadConfiguration {
 	@Bean
 	CommandLineRunner initEmployeeDatabase(EmployeeRepository repository) {
 		return args -> {
-			log.info("Preloading " + repository.save(new Employee("Bilbo Baggins", "burglar")));
-			log.info("Preloading " + repository.save(new Employee("Frodo Baggins", "thief")));
+			log.info("Preloading " + repository.save(new EmployeeDTO("Bilbo Baggins", "burglar")));
+			log.info("Preloading " + repository.save(new EmployeeDTO("Frodo Baggins", "thief")));
 		};
 	}
 
 	@Bean
-	CommandLineRunner initUserDatabase(UserRepository repository) {
+	CommandLineRunner initUserDatabase(UserDTORepository repository) {
 		return args -> {
-			log.info("Preloading " + repository.save(new User("Pepe", "nombre calle", "pepe@go.com")));
-			log.info("Preloading " + repository.save(new User("Juan", "nombre calle 2", "juan@go.com")));
+			log.info("Preloading " + repository.save(new UserDTO("Pepe", "nombre calle", "pepe@go.com")));
+			log.info("Preloading " + repository.save(new UserDTO("Juan", "nombre calle 2", "juan@go.com")));
 		};
 	}
 

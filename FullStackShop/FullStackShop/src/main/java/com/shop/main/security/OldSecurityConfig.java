@@ -12,34 +12,5 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.shop.services.UserAuthService;;
+import com.shop.auth.service.UserService;;
 
-@Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
-	private UserAuthService userAuthService;
-
-	@Override
-	protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.userDetailsService(userAuthService);
-	}
-
-	@Override
-	 protected void configure(HttpSecurity http) throws Exception {
-	 http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-	 .antMatchers("/api/users/**").authenticated().and().httpBasic().realmName("User Registration System")
-	 .and().csrf().disable();
-	 }
-
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userAuthService).passwordEncoder(passwordEncoder());
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-}

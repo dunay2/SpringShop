@@ -1,6 +1,7 @@
-package com.shop.services;
+package com.shop.auth.service;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +11,41 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.shop.entities.UserSecurity;
-import com.shop.repositories.UserSecurityRepository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.shop.auth.model.User;
+import com.shop.auth.repository.UserRepository;
+
+/**
+ * 
+ * Implements UserDetailsService for login/authentication with Spring Security's
+ * 
+ * @author ashh412
+ *
+ */
 @Service
-public class UserAuthService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
-	private UserSecurityRepository userSecurityRepository;
+	private UserRepository userAuthRepository;
 
 	@Override
+	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserSecurity user = userSecurityRepository.findByUsername(username);
+		User user = userAuthRepository.findByUsername(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("Opps! user not found with user-name: " + username);
+			throw new UsernameNotFoundException("User not found with user-name: " + username);
 		}
+
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				getAuthorities(user));
 	}
 
-	private Collection<GrantedAuthority> getAuthorities(UserSecurity user) {
+	private Collection<GrantedAuthority> getAuthorities(User user) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities = AuthorityUtils.createAuthorityList(user.getRole());
+
+		String roles = user.getRoles().stream().map(e -> e.toString()).reduce("", String::concat);
+		authorities = AuthorityUtils.createAuthorityList(roles);
 		return authorities;
+
 	}
 }

@@ -1,4 +1,4 @@
-package com.shop.entities;
+package com.shop.app.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +12,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "Users")
-public class User {
+@Table(name = "UserDTO")
+public class UserDTO {
 	@Id
 	@GeneratedValue
 	@Column(name = "USER_ID")
@@ -32,10 +32,10 @@ public class User {
 	@Column(name = "EMAIL")
 	private String email;
 
-	public User() {
+	public UserDTO() {
 	}
 
-	public User(String name, String address, String email) {
+	public UserDTO(String name, String address, String email) {
 		this.name = name;
 		this.address = address;
 		this.email = email;
